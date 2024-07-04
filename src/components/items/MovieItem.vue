@@ -1,0 +1,74 @@
+<template>
+  <div class="movie-item">
+    <router-link :to="`/movie/${movie.id}`">
+      <img :src="posterPath" :alt="movie.title" class="hover:opacity-75 transition easy-in-out duration-150 rounded-[15px] mb-5" />
+    </router-link>
+    <div class="text-container">
+      <h3 class="movie-title">{{ movie.title }}</h3>
+      <div class="flex">
+        <div class="mt-1">
+          <svg width="15px" height="15px" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--twemoji" preserveAspectRatio="xMidYMid meet">
+            <path fill="#FFAC33" d="M27.287 34.627c-.404 0-.806-.124-1.152-.371L18 28.422l-8.135 5.834a1.97 1.97 0 0 1-2.312-.008a1.971 1.971 0 0 1-.721-2.194l3.034-9.792l-8.062-5.681a1.98 1.98 0 0 1-.708-2.203a1.978 1.978 0 0 1 1.866-1.363L12.947 13l3.179-9.549a1.976 1.976 0 0 1 3.749 0L23 13l10.036.015a1.975 1.975 0 0 1 1.159 3.566l-8.062 5.681l3.034 9.792a1.97 1.97 0 0 1-.72 2.194a1.957 1.957 0 0 1-1.16.379z"></path>
+          </svg>
+        </div>
+        <span class="ml-2">{{ Math.round(movie.vote_average * 10) }}% | {{ movie.release_date }}</span>
+
+      </div>
+      <span class="text-sm text-[#F2613F]">
+        <span :key="genre" v-for="(genre,index) in movie.genre_ids"> {{ genreTypeName(genre,index) }}</span>
+      </span>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    movie: {
+      type: Object,
+      required: true
+    },
+    genres:{
+      required: true
+    }
+  },
+  computed: {
+    posterPath() {
+      return `https://image.tmdb.org/t/p/w500${this.movie.poster_path}`;
+    }
+  },
+
+  methods: {
+  genreTypeName(genreId, index) {
+    if (this.movie.genres && this.movie.genres.length > 0) {
+      for (const item of this.genres) {
+        if (item.id === genreId) {
+          if (this.movie.genres.length - 1 === index) {
+            return item.name;
+          } else {
+            return item.name + ", ";
+          }
+        }
+      }
+    }
+    return "";
+  }
+}
+
+}
+</script>
+
+<style scoped>
+.movie-item {
+  max-width: 160px; /* Use it for adjusting the image sizee :(*/
+}
+
+.text-container {
+  word-wrap: break-word;
+}
+
+.movie-title {
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+</style>
